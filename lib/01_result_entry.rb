@@ -1,5 +1,5 @@
 class ResultEntry
-  attr_reader :destination_vertex, :lastEdge, :cost_to_vertex
+  attr_reader :destination_vertex, :last_edge, :cost_to_vertex
 
   def initialize(destination_vertex, last_edge, cost_to_vertex)
     @destination_vertex = destination_vertex

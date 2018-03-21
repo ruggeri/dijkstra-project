@@ -7,15 +7,22 @@ class Fringe
     unless entry.superior_to?(@store[entry.destination_vertex])
       # Return nothing
       return {
-        did_insert: false,
+        action: :old_entry_better,
+        did_update: false,
         fringe: self,
       }
+    end
+
+    if @store[entry.destination_vertex].nil?
+      action = :insert
+    else
+      action = :update
     end
 
     new_store = @store.dup
     new_store[entry.destination_vertex] = entry
     return {
-      did_insert: true,
+      action: action,
       fringe: Fringe.new(new_store),
     }
   end

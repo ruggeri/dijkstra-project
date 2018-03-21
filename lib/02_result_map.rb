@@ -12,4 +12,8 @@ class ResultMap
     new_store[entry.destination_vertex] = entry
     return ResultMap.new(new_store)
   end
+
+  def has_vertex?(vertex)
+    @store.has_key?(vertex)
+  end
 end
