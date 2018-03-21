@@ -23,4 +23,12 @@ class ResultEntry
      (last_edge == other_re.last_edge) &&
      (cost_to_vertex == other_re.cost_to_vertex))
   end
+
+  def to_s
+    hash = {
+      vertex: destination_vertex.name,
+      last_edge: last_edge.name,
+      cost_to_vertex: cost_to_vertex,
+    }
+  end
 end

@@ -34,7 +34,7 @@ class Fringe
     end
 
     new_store = @store.dup
-    new_store.delete(entry.destination_vertex)
+    new_store.delete(best_entry.destination_vertex)
     return {
       best_entry: best_entry,
       fringe: Fringe.new(new_store),
@@ -47,6 +47,15 @@ class Fringe
 
   def ==(other_fringe)
     store == other_fringe.store
+  end
+
+  def to_s
+    hash = {}
+    @store.each do |v, entry|
+      hash[v.name] = entry
+    end
+
+    hash.to_s
   end
 
   protected

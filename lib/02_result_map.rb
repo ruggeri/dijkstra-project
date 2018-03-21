@@ -21,6 +21,15 @@ class ResultMap
     store == other_rm.store
   end
 
+  def to_s
+    hash = {}
+    @store.each do |v, entry|
+      hash[v.name] = entry
+    end
+
+    hash.to_s
+  end
+
   protected
   attr_reader :store
 end

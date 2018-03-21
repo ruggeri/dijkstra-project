@@ -59,4 +59,6 @@ def add_vertex_edges(result, fringe, best_entry)
       )
     )
   end
+
+  return fringe
 end
