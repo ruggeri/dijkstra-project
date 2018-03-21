@@ -5,6 +5,10 @@ class UndirectedVertex
     @name = name
     @edges = []
   end
+
+  def ==(other_vertex)
+    self.equal?(other_vertex)
+  end
 end
 
 class UndirectedEdge
@@ -30,5 +34,9 @@ class UndirectedEdge
     return vertices[1] if vertices[0] == vertex
     return vertices[0] if vertices[1] == vertex
     raise "vertex is at neither end"
+  end
+
+  def ==(other_edge)
+    self.equal?(other_edge)
   end
 end

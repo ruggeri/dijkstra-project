@@ -6,9 +6,9 @@ class Message
   end
 
   def ==(msg)
-    ((name == msg.name)
-     && (result == msg.result)
-     && (fringe == msg.fringe))
+    ((name == msg.name) &&
+     (result == msg.result) &&
+     (fringe == msg.fringe))
   end
 end
 
@@ -27,7 +27,7 @@ class ExtractionMessage < Message
   end
 
   def ==(msg)
-    super(msg) && best_entry == msg.best_entry
+    super(msg) && (best_entry == msg.best_entry)
   end
 end
 

@@ -44,4 +44,11 @@ class Fringe
   def empty?
     @store.empty?
   end
+
+  def ==(other_fringe)
+    store == other_fringe.store
+  end
+
+  protected
+  attr_reader :store
 end

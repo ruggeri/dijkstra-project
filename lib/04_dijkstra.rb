@@ -1,20 +1,20 @@
-require './01_result_entry'
-require './02_result_map'
-require './03_fringe'
-require './ff_messages'
+require_relative './01_result_entry'
+require_relative './02_result_map'
+require_relative './03_fringe'
+require_relative './ff_messages'
 
 def dijkstra(start_vertex)
   result = ResultMap.new
   fringe = Fringe.new
 
   fringe = fringe.add_entry(
-    ResultEntry.new(destination_vertex, nil, 0)
+    ResultEntry.new(start_vertex, nil, 0)
   )[:fringe]
 
   Fiber.yield InitializationMessage.new(result, fringe)
 
   until fringe.empty?
-    [best_entry, fringe] = fringe.extract.values_at(
+    best_entry, fringe = fringe.extract.values_at(
       :best_entry, :fringe
     )
 

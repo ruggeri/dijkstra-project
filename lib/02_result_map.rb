@@ -16,4 +16,11 @@ class ResultMap
   def has_vertex?(vertex)
     @store.has_key?(vertex)
   end
+
+  def ==(other_rm)
+    store == other_rm.store
+  end
+
+  protected
+  attr_reader :store
 end

@@ -8,10 +8,19 @@ class ResultEntry
   end
 
   def superior_to?(other_entry)
-    unless destination_vertex == other_entry.destination_vertex
+    return true if other_entry.nil?
+
+    other_vertex = other_entry.destination_vertex
+    if destination_vertex != other_vertex
       raise "incompatible entries"
     end
 
     cost_to_vertex < other_entry.cost_to_vertex
+  end
+
+  def ==(other_re)
+    ((destination_vertex == other_re.destination_vertex) &&
+     (last_edge == other_re.last_edge) &&
+     (cost_to_vertex == other_re.cost_to_vertex))
   end
 end
