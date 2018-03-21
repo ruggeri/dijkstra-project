@@ -1,3 +1,4 @@
+require 'byebug'
 require 'fiber'
 
 require_relative './graph.rb'
@@ -12,6 +13,6 @@ end
 
 while fiber.alive?
   msg = fiber.resume
-
-  p msg
 end
+
+pp msg

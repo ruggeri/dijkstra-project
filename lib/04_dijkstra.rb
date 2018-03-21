@@ -42,7 +42,7 @@ def add_vertex_edges(result, fringe, best_entry)
       best_entry.cost_to_vertex + edge.cost
     )
 
-    if result.has_vertex?(vertex)
+    if result.has_vertex?(new_vertex)
       action = :result_has_vertex
     else
       action, fringe = (

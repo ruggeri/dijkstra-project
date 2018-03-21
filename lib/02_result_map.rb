@@ -21,13 +21,13 @@ class ResultMap
     store == other_rm.store
   end
 
-  def to_s
+  def inspect
     hash = {}
     @store.each do |v, entry|
       hash[v.name] = entry
     end
 
-    hash.to_s
+    hash.inspect
   end
 
   protected

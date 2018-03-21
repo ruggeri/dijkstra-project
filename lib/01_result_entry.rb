@@ -9,12 +9,6 @@ class ResultEntry
 
   def superior_to?(other_entry)
     return true if other_entry.nil?
-
-    other_vertex = other_entry.destination_vertex
-    if destination_vertex != other_vertex
-      raise "incompatible entries"
-    end
-
     cost_to_vertex < other_entry.cost_to_vertex
   end
 
@@ -24,11 +18,13 @@ class ResultEntry
      (cost_to_vertex == other_re.cost_to_vertex))
   end
 
-  def to_s
+  def inspect
     hash = {
       vertex: destination_vertex.name,
-      last_edge: last_edge.name,
+      last_edge: last_edge && last_edge.name,
       cost_to_vertex: cost_to_vertex,
     }
+
+    return hash.inspect
   end
 end

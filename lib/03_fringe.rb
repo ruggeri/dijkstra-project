@@ -49,13 +49,13 @@ class Fringe
     store == other_fringe.store
   end
 
-  def to_s
+  def inspect
     hash = {}
     @store.each do |v, entry|
       hash[v.name] = entry
     end
 
-    hash.to_s
+    hash.inspect
   end
 
   protected
