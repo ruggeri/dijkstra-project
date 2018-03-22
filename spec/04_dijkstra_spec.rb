@@ -9,27 +9,22 @@ require_relative '../lib/ff_messages.rb'
 
 require_relative './graph.rb'
 
-graph = build_graph()
-$vertices = graph[:vertices]
-$edges = graph[:edges]
-$start_vertex = $vertices["ATL"]
-
-$fiber = Fiber.new do
-  dijkstra($start_vertex)
-end
-
 describe "#dijkstra" do
+  let(:graph) { build_graph }
+  let(:vertices) { graph[:vertices] }
+  let(:edges) { graph[:edges] }
+
+  let(:atlanta) { vertices["ATL"] }
+  let(:fiber) do
+    Fiber.new { dijkstra(atlanta) }
+  end
+
   it "starts by yielding initialization message" do
     # Fringe should start with the source vertex.
-    msg = $fiber.resume
+    msg = fiber.resume
 
     expected_fringe = Fringe.new(
-      { $vertices["ATL"] => ResultEntry.new(
-          $vertices["ATL"],
-          nil,
-          0
-        ).to_hash
-      }
+      { atlanta => ResultEntry.new(atlanta, nil, 0) }
     )
 
     expect(msg.name).to eq(:initialization)
@@ -37,17 +32,12 @@ describe "#dijkstra" do
     expect(msg.fringe.to_hash).to eq(expected_fringe.to_hash)
   end
 
-  it "extracts the source vertex first" do
-    msg = $fiber.resume
+  it "extracts the source vertex next" do
+    _ = fiber.resume
+    msg = fiber.resume
 
-    best_entry = ResultEntry.new(
-      $vertices["ATL"],
-      nil,
-      0
-    )
-    expected_result_map = ResultMap.new(
-      { $vertices["ATL"] => best_entry }
-    )
+    best_entry = ResultEntry.new(atlanta, nil, 0)
+    expected_result_map = ResultMap.new({ atlanta => best_entry })
     expected_fringe = Fringe.new({})
 
     expect(msg.name).to eq(:extraction)
@@ -58,14 +48,18 @@ describe "#dijkstra" do
 end
 
 describe "#add_vertex_edge" do
-  let(:atlanta) { $vertices["ATL"] }
-  let(:denver) { $vertices["DEN"] }
-  let(:los_angeles) { $vertices["LAX"] }
-  let(:dallas) { $vertices["DFW"] }
+  let(:graph) { build_graph }
+  let(:vertices) { graph[:vertices] }
+  let(:edges) { graph[:edges] }
 
-  let(:atl_den) { $edges["ATL_DEN"] }
-  let(:atl_lax) { $edges["ATL_LAX"] }
-  let(:dfw_atl) { $edges["DFW_ATL"] }
+  let(:atlanta) { vertices["ATL"] }
+  let(:denver) { vertices["DEN"] }
+  let(:los_angeles) { vertices["LAX"] }
+  let(:dallas) { vertices["DFW"] }
+
+  let(:atl_den) { edges["ATL_DEN"] }
+  let(:atl_lax) { edges["ATL_LAX"] }
+  let(:dfw_atl) { edges["DFW_ATL"] }
 
   let(:extracted_entry) do
     ResultEntry.new(atlanta, nil, 0)
@@ -82,17 +76,33 @@ describe "#add_vertex_edge" do
     Fiber.new { add_vertex_edges(result_map, fringe, extracted_entry) }
   end
 
-  describe "inserting first edge (atl to den)" do
-    let(:expected_new_entry) do
-      ResultEntry.new(
-        denver,
-        atl_den,
-        atl_den.cost
-      )
-    end
+  let(:expected_denver_entry) do
+    ResultEntry.new(
+      denver,
+      atl_den,
+      atl_den.cost
+    )
+  end
 
+  let(:expected_lax_entry) do
+    ResultEntry.new(
+      los_angeles,
+      atl_lax,
+      atl_lax.cost
+    )
+  end
+
+  let(:expected_dallas_entry) do
+    ResultEntry.new(
+      dallas,
+      dfw_atl,
+      dfw_atl.cost
+    )
+  end
+
+  describe "inserting first edge (atl to den)" do
     let(:expected_fringe) do
-      Fringe.new({ denver => expected_new_entry })
+      Fringe.new({ denver => expected_denver_entry })
     end
 
     it "doesn't change result map" do
@@ -104,7 +114,7 @@ describe "#add_vertex_edge" do
 
     it "builds a new entry" do
       msg = fiber.resume
-      expect(msg.new_entry.to_hash).to eq(expected_new_entry.to_hash)
+      expect(msg.new_entry.to_hash).to eq(expected_denver_entry.to_hash)
     end
 
     it "inserts new entry in fringe" do
@@ -119,22 +129,10 @@ describe "#add_vertex_edge" do
   end
 
   describe "inserting second edge (atl to lax)" do
-    let(:expected_new_entry) do
-      ResultEntry.new(
-        los_angeles,
-        atl_lax,
-        atl_lax.cost
-      )
-    end
-
     let(:expected_fringe) do
       Fringe.new(
-        { denver => ResultEntry.new(
-            denver,
-            atl_den,
-            atl_den.cost
-          ),
-          los_angeles => expected_new_entry
+        { denver => expected_denver_entry,
+          los_angeles => expected_lax_entry,
         }
       )
     end
@@ -153,7 +151,7 @@ describe "#add_vertex_edge" do
 
     it "builds a new entry" do
       msg = fiber.resume
-      expect(msg.new_entry.to_hash).to eq(expected_new_entry.to_hash)
+      expect(msg.new_entry.to_hash).to eq(expected_lax_entry.to_hash)
     end
 
     it "inserts new entry in fringe" do
@@ -168,27 +166,11 @@ describe "#add_vertex_edge" do
   end
 
   describe "inserting third edge (dfw to atl)" do
-    let(:expected_new_entry) do
-      ResultEntry.new(
-        dallas,
-        dfw_atl,
-        dfw_atl.cost
-      )
-    end
-
     let(:expected_fringe) do
       Fringe.new(
-        { denver => ResultEntry.new(
-            denver,
-            atl_den,
-            atl_den.cost
-          ),
-          los_angeles => ResultEntry.new(
-            los_angeles,
-            atl_lax,
-            atl_lax.cost
-          ),
-          dallas => expected_new_entry
+        { denver => expected_denver_entry,
+          los_angeles => expected_lax_entry,
+          dallas => expected_dallas_entry
         }
       )
     end
@@ -208,7 +190,7 @@ describe "#add_vertex_edge" do
 
     it "builds a new entry" do
       msg = fiber.resume
-      expect(msg.new_entry.to_hash).to eq(expected_new_entry.to_hash)
+      expect(msg.new_entry.to_hash).to eq(expected_dallas_entry.to_hash)
     end
 
     it "inserts new entry in fringe" do
@@ -231,25 +213,23 @@ describe "#add_vertex_edge" do
       new_fringe = fiber.resume
 
       expected_new_fringe = Fringe.new(
-        { denver => ResultEntry.new(
-            denver,
-            atl_den,
-            atl_den.cost
-          ),
-          los_angeles => ResultEntry.new(
-            los_angeles,
-            atl_lax,
-            atl_lax.cost
-          ),
-          dallas => ResultEntry.new(
-            dallas,
-            dfw_atl,
-            dfw_atl.cost
-          ),
+        { denver => expected_denver_entry,
+          los_angeles => expected_lax_entry,
+          dallas => expected_dallas_entry,
         }
       )
 
       expect(new_fringe.to_hash).to eq(expected_new_fringe.to_hash)
     end
+  end
+end
+
+describe "#dijkstra (round two)" do
+  let(:graph) { build_graph }
+  let(:vertices) { graph[:vertices] }
+  let(:edges) { graph[:edges] }
+
+  it "yields msg after considering all edges of an extracted vertex" do
+    
   end
 end
