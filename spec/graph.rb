@@ -31,22 +31,31 @@ EDGES = [
   ["DEN", "CLT", 11.8],
 ]
 
-def graph()
+def build_graph()
   vertices = {}
 
   VERTEX_NAMES.each { |name|
     vertices[name] = UndirectedVertex.new(name)
   }
 
+  edges = {}
+
   EDGES.each do |edge_data|
     name1, name2, cost = edge_data
-    UndirectedEdge.new(
-      "#{name1}_#{name2}",
+    edge_name = "#{name1}_#{name2}"
+
+    edge = UndirectedEdge.new(
+      edge_name,
       vertices[name1],
       vertices[name2],
       cost,
     )
+
+    edges[edge_name] = edge
   end
 
-  return vertices
+  return {
+    edges: edges,
+    vertices: vertices,
+  }
 end

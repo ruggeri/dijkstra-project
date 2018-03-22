@@ -5,7 +5,7 @@ require 'pp'
 require_relative './graph.rb'
 require_relative '../lib/04_dijkstra.rb'
 
-vertices = graph()
+vertices = build_graph()[:vertices]
 start_vertex = vertices["ATL"]
 
 fiber = Fiber.new do
