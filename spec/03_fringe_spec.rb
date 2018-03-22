@@ -72,20 +72,20 @@ describe Fringe do
     end
 
     it "returns map with two keys" do
-      result = fringe.add_entry(entry1)
+      add_entry_result = fringe.add_entry(entry1)
 
-      expect(result).to have_key(:action)
-      expect(result).to have_key(:fringe)
+      expect(add_entry_result).to have_key(:action)
+      expect(add_entry_result).to have_key(:fringe)
     end
 
 
     it "stores entries under vertex name" do
-      results = fringe.add_entry(
+      add_entry_result = fringe.add_entry(
         entry1
       )
 
-      new_fringe = results[:fringe]
-      action = results[:action]
+      new_fringe = add_entry_result[:fringe]
+      action = add_entry_result[:action]
 
       expected_store = {
         entry1.destination_vertex => entry1
@@ -97,10 +97,10 @@ describe Fringe do
     it "replaces an inferior entry" do
       new_fringe = fringe.add_entry(entry2)[:fringe]
 
-      results = new_fringe.add_entry(entry1)
+      add_entry_result = new_fringe.add_entry(entry1)
 
-      new_fringe = results[:fringe]
-      action = results[:action]
+      new_fringe = add_entry_result[:fringe]
+      action = add_entry_result[:action]
 
       expected_store = {
         entry1.destination_vertex => entry1
@@ -112,10 +112,10 @@ describe Fringe do
     it "keeps a superior entry" do
       new_fringe = fringe.add_entry(entry1)[:fringe]
 
-      results = new_fringe.add_entry(entry2)
+      add_entry_result = new_fringe.add_entry(entry2)
 
-      new_fringe = results[:fringe]
-      action = results[:action]
+      new_fringe = add_entry_result[:fringe]
+      action = add_entry_result[:action]
 
       expected_store = {
         entry1.destination_vertex => entry1
@@ -135,10 +135,10 @@ describe Fringe do
     end
 
     it "returns two keys" do
-      result = full_fringe.extract
+      add_entry_result = full_fringe.extract
 
-      expect(result).to have_key(:best_entry)
-      expect(result).to have_key(:fringe)
+      expect(add_entry_result).to have_key(:best_entry)
+      expect(add_entry_result).to have_key(:fringe)
     end
 
     it "extracts the min cost key" do
@@ -171,17 +171,17 @@ describe Fringe do
     end
 
     it "handles repeated extraction" do
-      result1 = full_fringe.extract
-      result2 = result1[:fringe].extract
-      result3 = result2[:fringe].extract
-      new_fringe = result3[:fringe]
+      add_entry_result1 = full_fringe.extract
+      add_entry_result2 = add_entry_result1[:fringe].extract
+      add_entry_result3 = add_entry_result2[:fringe].extract
+      new_fringe = add_entry_result3[:fringe]
 
       expected_store = {}
 
       expect(new_fringe.send(:store)).to eq({})
-      expect(result1[:best_entry]).to eq(entry2)
-      expect(result2[:best_entry]).to eq(entry3)
-      expect(result3[:best_entry]).to eq(entry4)
+      expect(add_entry_result1[:best_entry]).to eq(entry2)
+      expect(add_entry_result2[:best_entry]).to eq(entry3)
+      expect(add_entry_result3[:best_entry]).to eq(entry4)
     end
   end
 

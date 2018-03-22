@@ -33,7 +33,7 @@ describe "#dijkstra" do
     )
 
     expect(msg.name).to eq(:initialization)
-    expect(msg.result).to eq(ResultMap.new)
+    expect(msg.result_map).to eq(ResultMap.new)
     expect(msg.fringe).to eq(expected_fringe)
   end
 
@@ -45,14 +45,14 @@ describe "#dijkstra" do
       nil,
       0
     )
-    expected_result = ResultMap.new(
+    expected_result_map = ResultMap.new(
       { $vertices["ATL"] => best_entry
       }
     )
     expected_fringe = Fringe.new({})
 
     expect(msg.name).to eq(:extraction)
-    expect(msg.result).to eq(expected_result)
+    expect(msg.result_map).to eq(expected_result_map)
     expect(msg.fringe).to eq(expected_fringe)
     expect(msg.best_entry).to eq(best_entry)
   end
@@ -99,7 +99,7 @@ describe "#add_vertex_edge" do
       msg = fiber.resume
 
       expect(msg.name).to eq(:edge_consideration)
-      expect(msg.result).to eq(result_map)
+      expect(msg.result_map).to eq(result_map)
     end
 
     it "builds a new entry" do
