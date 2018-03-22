@@ -1,9 +1,18 @@
 class UndirectedVertex
-  attr_reader :name, :edges
+  attr_reader :name
 
   def initialize(name)
     @name = name
     @edges = []
+  end
+
+  def add_edge(edge)
+    @edges << edge
+  end
+
+  def edges
+    # Woe to those who try to mutate this list!
+    @edges.sort_by { |e| e.name }
   end
 
   def ==(other_vertex)
@@ -19,8 +28,8 @@ class UndirectedEdge
     @vertices = [vertex1, vertex2]
     @cost = cost
 
-    vertex1.edges << self
-    vertex2.edges << self
+    vertex1.add_edge(self)
+    vertex2.add_edge(self)
   end
 
   def destroy!
