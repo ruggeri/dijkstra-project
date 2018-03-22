@@ -32,11 +32,11 @@ describe ResultEntry do
 
   describe "#initialize" do
     it "adds destination_vertex attribute" do
-      expect(entry1.destination_vertex).to eq(v2)
+      expect(entry1.destination_vertex.to_hash).to eq(v2.to_hash)
     end
 
     it "adds last_edge attribute" do
-      expect(entry1.last_edge).to eq(e)
+      expect(entry1.last_edge.to_hash).to eq(e.to_hash)
     end
 
     it "adds cost_to_vertex attribute" do

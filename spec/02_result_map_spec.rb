@@ -56,7 +56,7 @@ describe ResultMap do
   describe "#add_entry" do
     it "does not mutate" do
       result_map.add_entry(entry1)
-      expect(result_map.send(:store)).to eq({})
+      expect(result_map.to_hash).to eq({})
     end
 
 
@@ -66,9 +66,9 @@ describe ResultMap do
       )
 
       expected_store = {
-        entry1.destination_vertex => entry1
+        entry1.destination_vertex.name => entry1.to_hash
       }
-      expect(new_result_map.send(:store)).to eq(expected_store)
+      expect(new_result_map.to_hash).to eq(expected_store.to_hash)
     end
 
     it "cannot add same vertex twice" do

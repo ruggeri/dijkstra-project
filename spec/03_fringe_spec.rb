@@ -61,14 +61,14 @@ describe Fringe do
 
   describe "#initialize" do
     it "starts with empty store" do
-      expect(fringe.send(:store)).to eq({})
+      expect(fringe.to_hash).to eq({})
     end
   end
 
   describe "#add_entry" do
     it "does not mutate" do
       fringe.add_entry(entry1)
-      expect(fringe.send(:store)).to eq({})
+      expect(fringe.to_hash).to eq({})
     end
 
     it "returns map with two keys" do
@@ -88,9 +88,9 @@ describe Fringe do
       action = add_entry_result[:action]
 
       expected_store = {
-        entry1.destination_vertex => entry1
+        entry1.destination_vertex.name => entry1.to_hash
       }
-      expect(new_fringe.send(:store)).to eq(expected_store)
+      expect(new_fringe.to_hash).to eq(expected_store)
       expect(action).to eq(:insert)
     end
 
@@ -103,9 +103,9 @@ describe Fringe do
       action = add_entry_result[:action]
 
       expected_store = {
-        entry1.destination_vertex => entry1
+        entry1.destination_vertex.name => entry1.to_hash
       }
-      expect(new_fringe.send(:store)).to eq(expected_store)
+      expect(new_fringe.to_hash).to eq(expected_store)
       expect(action).to eq(:update)
     end
 
@@ -118,9 +118,9 @@ describe Fringe do
       action = add_entry_result[:action]
 
       expected_store = {
-        entry1.destination_vertex => entry1
+        entry1.destination_vertex.name => entry1.to_hash
       }
-      expect(new_fringe.send(:store)).to eq(expected_store)
+      expect(new_fringe.to_hash).to eq(expected_store)
       expect(action).to eq(:old_entry_better)
     end
   end
@@ -144,30 +144,30 @@ describe Fringe do
     it "extracts the min cost key" do
       e = full_fringe.extract[:best_entry]
 
-      expect(e).to eq(entry2)
+      expect(e.to_hash).to eq(entry2.to_hash)
     end
 
     it "returns a new fringe" do
       new_fringe = full_fringe.extract[:fringe]
 
       expected_store = {
-        entry3.destination_vertex => entry3,
-        entry4.destination_vertex => entry4,
+        entry3.destination_vertex.name => entry3.to_hash,
+        entry4.destination_vertex.name => entry4.to_hash,
       }
 
-      expect(new_fringe.send(:store)).to eq(expected_store)
+      expect(new_fringe.to_hash).to eq(expected_store)
     end
 
     it "does not mutate old fringe" do
       full_fringe.extract
 
       expected_store = {
-        entry2.destination_vertex => entry2,
-        entry3.destination_vertex => entry3,
-        entry4.destination_vertex => entry4,
+        entry2.destination_vertex.name => entry2.to_hash,
+        entry3.destination_vertex.name => entry3.to_hash,
+        entry4.destination_vertex.name => entry4.to_hash,
       }
 
-      expect(full_fringe.send(:store)).to eq(expected_store)
+      expect(full_fringe.to_hash).to eq(expected_store)
     end
 
     it "handles repeated extraction" do
@@ -178,10 +178,10 @@ describe Fringe do
 
       expected_store = {}
 
-      expect(new_fringe.send(:store)).to eq({})
-      expect(add_entry_result1[:best_entry]).to eq(entry2)
-      expect(add_entry_result2[:best_entry]).to eq(entry3)
-      expect(add_entry_result3[:best_entry]).to eq(entry4)
+      expect(new_fringe.to_hash).to eq({})
+      expect(add_entry_result1[:best_entry].to_hash).to eq(entry2.to_hash)
+      expect(add_entry_result2[:best_entry].to_hash).to eq(entry3.to_hash)
+      expect(add_entry_result3[:best_entry].to_hash).to eq(entry4.to_hash)
     end
   end
 

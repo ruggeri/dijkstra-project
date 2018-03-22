@@ -28,13 +28,13 @@ describe "#dijkstra" do
           $vertices["ATL"],
           nil,
           0
-        )
+        ).to_hash
       }
     )
 
     expect(msg.name).to eq(:initialization)
-    expect(msg.result_map).to eq(ResultMap.new)
-    expect(msg.fringe).to eq(expected_fringe)
+    expect(msg.result_map.to_hash).to eq({})
+    expect(msg.fringe.to_hash).to eq(expected_fringe.to_hash)
   end
 
   it "extracts the source vertex first" do
@@ -46,15 +46,14 @@ describe "#dijkstra" do
       0
     )
     expected_result_map = ResultMap.new(
-      { $vertices["ATL"] => best_entry
-      }
+      { $vertices["ATL"] => best_entry }
     )
     expected_fringe = Fringe.new({})
 
     expect(msg.name).to eq(:extraction)
-    expect(msg.result_map).to eq(expected_result_map)
-    expect(msg.fringe).to eq(expected_fringe)
-    expect(msg.best_entry).to eq(best_entry)
+    expect(msg.result_map.to_hash).to eq(expected_result_map.to_hash)
+    expect(msg.fringe.to_hash).to eq(expected_fringe.to_hash)
+    expect(msg.best_entry.to_hash).to eq(best_entry.to_hash)
   end
 end
 
@@ -99,7 +98,7 @@ describe "#add_vertex_edge" do
       msg = fiber.resume
 
       expect(msg.name).to eq(:edge_consideration)
-      expect(msg.result_map).to eq(result_map)
+      expect(msg.result_map.to_hash).to eq(result_map.to_hash)
     end
 
     it "builds a new entry" do
