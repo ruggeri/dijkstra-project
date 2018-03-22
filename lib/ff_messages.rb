@@ -16,6 +16,10 @@ class InitializationMessage < Message
   def initialize(result, fringe)
     super(:initialization, result, fringe)
   end
+
+  def inspect
+    ({ name: name, result: result, fringe: fringe }).inspect
+  end
 end
 
 class ExtractionMessage < Message
@@ -29,6 +33,14 @@ class ExtractionMessage < Message
   def ==(msg)
     super(msg) && (best_entry == msg.best_entry)
   end
+
+  def inspect
+    ({ name: name,
+       result: result,
+       fringe: fringe,
+       best_entry: best_entry
+     }).inspect
+  end
 end
 
 class EdgeConsiderationMessage < Message
@@ -40,6 +52,15 @@ class EdgeConsiderationMessage < Message
 
   def ==(msg)
     super(msg) && (new_entry == msg.new_entry) && (action == msg.action)
+  end
+
+  def inspect
+    ({ name: name,
+       result: result,
+       fringe: fringe,
+       new_entry: new_entry,
+       action: action
+     }).inspect
   end
 end
 
@@ -53,5 +74,13 @@ class UpdateCompletionMessage < Message
 
   def ==(msg)
     super(msg) && best_entry == msg.best_entry
+  end
+
+  def inspect
+    ({ name: name,
+       result: result,
+       fringe: fringe,
+       best_entry: best_entry
+     }).inspect
   end
 end
