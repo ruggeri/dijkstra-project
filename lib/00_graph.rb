@@ -1,3 +1,5 @@
+# This is entirely written for you.
+
 class UndirectedVertex
   attr_reader :name
 
