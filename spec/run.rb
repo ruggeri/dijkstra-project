@@ -6,39 +6,46 @@ require_relative './graph.rb'
 require_relative '../lib/04_dijkstra.rb'
 require_relative './verified_message_logs'
 
-vertices = build_graph()[:vertices]
-start_vertex = vertices["ATL"]
-
-$fiber = Fiber.new do
-  dijkstra(start_vertex)
-end
-
 def build_message_logs
+  vertices = build_graph()[:vertices]
+  start_vertex = vertices["ATL"]
+
+  fiber = Fiber.new do
+    dijkstra(start_vertex)
+  end
+
   messages = []
-  while $fiber.alive?
-    messages << $fiber.resume.to_hash
+  while fiber.alive?
+    messages << fiber.resume.to_hash
   end
 
   messages
 end
 
-def play_message_logs
-  while $fiber.alive?
-    msg = $fiber.resume.to_hash
+# Used to generate verified logs
+def print_message_logs
+  messages = build_message_logs
+
+  messages.each do |msg_hash|
     puts "=" * 40
-    pp msg.to_hash
-    gets
+    pp msg_hash
   end
 end
 
 def verify_message_logs
-  require_relative './verified_message_logs'
   expected_logs = verified_message_logs
 
+  vertices = build_graph()[:vertices]
+  start_vertex = vertices["ATL"]
+
+  fiber = Fiber.new do
+    dijkstra(start_vertex)
+  end
+
   prev_msg = nil
-  while $fiber.alive?
+  while fiber.alive?
     expected_message = expected_logs.shift
-    msg = $fiber.resume.to_hash
+    msg = fiber.resume.to_hash
 
     puts "=" * 40
     puts
@@ -59,5 +66,4 @@ def verify_message_logs
   end
 end
 
-#play_message_logs
 verify_message_logs
