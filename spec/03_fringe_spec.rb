@@ -169,6 +169,20 @@ describe Fringe do
 
       expect(full_fringe.send(:store)).to eq(expected_store)
     end
+
+    it "handles repeated extraction" do
+      result1 = full_fringe.extract
+      result2 = result1[:fringe].extract
+      result3 = result2[:fringe].extract
+      new_fringe = result3[:fringe]
+
+      expected_store = {}
+
+      expect(new_fringe.send(:store)).to eq({})
+      expect(result1[:best_entry]).to eq(entry2)
+      expect(result2[:best_entry]).to eq(entry3)
+      expect(result3[:best_entry]).to eq(entry4)
+    end
   end
 
   describe "#empty?" do
