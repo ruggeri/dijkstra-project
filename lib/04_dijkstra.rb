@@ -4,61 +4,30 @@ require_relative './03_fringe'
 require_relative './ff_messages'
 
 def dijkstra(start_vertex)
-  result_map = ResultMap.new
-  fringe = Fringe.new
-
-  fringe = fringe.add_entry(
-    ResultEntry.new(start_vertex, nil, 0)
-  )[:fringe]
-
-  Fiber.yield InitializationMessage.new(result_map, fringe)
+  # 1. Start empty result map and fringe with start vertex. Yield
+  # initialization message.
 
   until fringe.empty?
-    best_entry, fringe = fringe.extract.values_at(
-      :best_entry, :fringe
-    )
+    # 2. Extract the minimum cost entry from the fringe. Add it to the
+    # result. Yield extraction message.
 
-    result_map = result_map.add_entry(best_entry)
+    # 3. Process all outgoing edges from the vertex.
 
-    Fiber.yield ExtractionMessage.new(result_map, fringe, best_entry)
-
-    fringe = add_vertex_edges(
-      result_map, fringe, best_entry
-    )
-
-    Fiber.yield UpdateCompletionMessage.new(result_map, fringe, best_entry)
+    # 4. When done, yield competion message.
   end
 
-  return result_map
+  # 5. When all done, return the result map.
 end
 
 def add_vertex_edges(result_map, fringe, best_entry)
-  vertex = best_entry.destination_vertex
-  vertex.edges.each do |edge|
-    new_vertex = edge.other_vertex(vertex)
-    new_entry = ResultEntry.new(
-      new_vertex,
-      edge,
-      best_entry.cost_to_vertex + edge.cost
-    )
+  # 1. Iterate through each edge of the extracted vertex.
 
-    if result_map.has_vertex?(new_vertex)
-      action = :result_map_has_vertex
-    else
-      action, fringe = (
-        fringe.add_entry(new_entry).values_at(:action, :fringe)
-      )
-    end
+  # 2. For each edge, build a candidate result entry for the new
+  # vertex on the other side.
 
-    Fiber.yield(
-      EdgeConsiderationMessage.new(
-        result_map,
-        fringe,
-        new_entry,
-        action,
-      )
-    )
-  end
+  # 2a. Skip if we already have the new vertex in the visited set.
+  # 2b. Else try to add the edge to the fringe. Yield an edge
+  # consideration message.
 
-  return fringe
+  # 3. When all done, return the updated fringe.
 end
