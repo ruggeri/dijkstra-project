@@ -14,6 +14,7 @@ end
 
 while fiber.alive?
   msg = fiber.resume
+  puts "=" * 40
   pp msg.to_hash
   gets
 end
