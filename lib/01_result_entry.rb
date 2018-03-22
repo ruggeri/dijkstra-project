@@ -18,13 +18,13 @@ class ResultEntry
      (cost_to_vertex == other_re.cost_to_vertex))
   end
 
-  def inspect
+  def to_hash
     hash = {
       vertex: destination_vertex.name,
       last_edge: last_edge && last_edge.name,
       cost_to_vertex: cost_to_vertex,
     }
 
-    return hash.inspect
+    return hash
   end
 end

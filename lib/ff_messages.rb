@@ -1,3 +1,5 @@
+require 'pp'
+
 class Message
   attr_reader :name, :result, :fringe
 
@@ -17,8 +19,8 @@ class InitializationMessage < Message
     super(:initialization, result, fringe)
   end
 
-  def inspect
-    ({ name: name, result: result, fringe: fringe }).inspect
+  def to_hash
+    ({ name: name, result: result.to_hash, fringe: fringe.to_hash })
   end
 end
 
@@ -34,12 +36,12 @@ class ExtractionMessage < Message
     super(msg) && (best_entry == msg.best_entry)
   end
 
-  def inspect
+  def to_hash
     ({ name: name,
-       result: result,
-       fringe: fringe,
-       best_entry: best_entry
-     }).inspect
+       result: result.to_hash,
+       fringe: fringe.to_hash,
+       best_entry: best_entry.to_hash
+     })
   end
 end
 
@@ -54,13 +56,13 @@ class EdgeConsiderationMessage < Message
     super(msg) && (new_entry == msg.new_entry) && (action == msg.action)
   end
 
-  def inspect
+  def to_hash
     ({ name: name,
-       result: result,
-       fringe: fringe,
-       new_entry: new_entry,
+       result: result.to_hash,
+       fringe: fringe.to_hash,
+       new_entry: new_entry.to_hash,
        action: action
-     }).inspect
+     })
   end
 end
 
@@ -76,11 +78,11 @@ class UpdateCompletionMessage < Message
     super(msg) && best_entry == msg.best_entry
   end
 
-  def inspect
+  def to_hash
     ({ name: name,
-       result: result,
-       fringe: fringe,
-       best_entry: best_entry
-     }).inspect
+       result: result.to_hash,
+       fringe: fringe.to_hash,
+       best_entry: best_entry.to_hash
+     })
   end
 end
