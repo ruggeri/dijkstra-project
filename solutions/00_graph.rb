@@ -1,3 +1,5 @@
+# This is entirely written for you.
+
 class UndirectedVertex
   attr_reader :name
 
@@ -17,6 +19,10 @@ class UndirectedVertex
 
   def ==(other_vertex)
     self.equal?(other_vertex)
+  end
+
+  def to_hash
+    { name: name, edges: edges.map(&:name) }
   end
 end
 
@@ -47,5 +53,9 @@ class UndirectedEdge
 
   def ==(other_edge)
     self.equal?(other_edge)
+  end
+
+  def to_hash
+    { name: name, vertices: vertices.map(&:name), cost: cost }
   end
 end
