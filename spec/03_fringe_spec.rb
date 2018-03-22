@@ -157,6 +157,18 @@ describe Fringe do
 
       expect(new_fringe.send(:store)).to eq(expected_store)
     end
+
+    it "does not mutate old fringe" do
+      full_fringe.extract
+
+      expected_store = {
+        entry2.destination_vertex => entry2,
+        entry3.destination_vertex => entry3,
+        entry4.destination_vertex => entry4,
+      }
+
+      expect(full_fringe.send(:store)).to eq(expected_store)
+    end
   end
 
   describe "#empty?" do
