@@ -8,7 +8,6 @@ class Fringe
       # Return nothing
       return {
         action: :old_entry_better,
-        did_update: false,
         fringe: self,
       }
     end
