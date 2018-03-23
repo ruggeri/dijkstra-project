@@ -26,7 +26,9 @@ def dijkstra(start_vertex)
       result_map, fringe, best_entry
     )
 
-    Fiber.yield UpdateCompletionMessage.new(result_map, fringe, best_entry)
+    Fiber.yield(
+      UpdateCompletionMessage.new(result_map, fringe, best_entry)
+    )
   end
 
   return result_map

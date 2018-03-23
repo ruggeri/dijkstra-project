@@ -4,6 +4,7 @@ class ResultEntry
   def initialize(destination_vertex, last_edge, cost_to_vertex)
   end
 
+  # Other entry is another entry or possibly nil.
   def superior_to?(other_entry)
   end
 

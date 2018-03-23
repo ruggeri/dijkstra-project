@@ -3,6 +3,8 @@ class ResultMap
     @store = store
   end
 
+  # Store a result entry permanently in the result map. Create a new
+  # store and new ResultMap and don't mutate this one.
   def add_entry(entry)
     if @store.has_key?(entry.destination_vertex)
       raise "Cannot add entry for same vertex twice!"
@@ -13,6 +15,7 @@ class ResultMap
     return ResultMap.new(new_store)
   end
 
+  # Checks if we already have a solution for this vertex.
   def has_vertex?(vertex)
     @store.has_key?(vertex)
   end

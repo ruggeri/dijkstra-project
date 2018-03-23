@@ -14,7 +14,7 @@ class UndirectedVertex
 
   def edges
     # Woe to those who try to mutate this list!
-    @edges.sort_by { |e| e.name }
+    @edges.sort_by { |e| e.name }.freeze
   end
 
   def ==(other_vertex)
